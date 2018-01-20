@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Fasigner{% endblock %}
+{% block content %}
+<style>
+    .main{
+        margin-left: 25%;
+    }
+/*    @media screen and (min-width:480px){
+        .m_img{
+            width: 70%;
+        }
+    }
+    @media screen and (min-width:720px) {
+        .m_img{
+            width: 60%;
+            border-radius: 0px 0px 8px 8px;
+        }
+    }*/
+    .m_img{
+        width: 65%;
+        
+    }
+    .img_header{
+        height:1.6cm;
+        border-radius: 1px;
+        border-top: aquamarine;
+        background:white;
+        padding-top: 2px;
+        border:5px;
+        width: 65%;
+        border-radius: 6px 6px 0px 0px;
+    }
+    h4{
+        line-height: 5px;
+    }
+    .img_header_title{
+        margin-left: 10px;
+    }
+    .img_con{
+        margin-bottom: 1.2cm;
+    }
+    .img_footer{
+        height:1.3cm;
+        background:white;
+        padding-top: 5px;
+        border:5px;
+        width: 65%;        
+        border-radius: 0px 0px 6px 6px;
+    }
+    .time{
+        font-size: 12px;
+    }
+    #_comment{
+        margin-top: 5px;
+        width: 90%;
+        border: none;
+        height:2em;
+        border-bottom: 2px solid rgb(226, 219, 223);
+    }
+    #_comment:focus{
+        border-color: snow;
+        outline: 0;
+        border-bottom: 2px solid rgb(226, 219, 223);
+        sbox-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 0, 0, .6);
+    }
+
+</style>
+
+<div>
+    <div class="main">
+    {% for p in photos %}
+        <div class="img_con">
+            <div class="img_header">
+                <div class="img_header_title">
+                <h4>Uploaded By {{p.upload_by}}</h4>
+                <p class="time">{{ p.created_date.time }}</p>
+                </div>
+            </div>
+            <a href="{{ p.original_photo.url }}">
+            <img src="{{ p.original_photo.url }}" class="m_img"></a>
+            <div class="img_footer">
+                <div class="img_header_title">
+                <input type="text" id="_comment">
+                </div>
+            </div>
+            
+        </div>
+    {% endfor %}    
+    </div>
+</div>
+
+{% endblock %}

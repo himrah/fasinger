@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Gallery{% endblock %}
+{% block content %}
+<div class="row">
+    {% if user.username %}
+    <h4>Welcome {{ user.username }}</h4>
+    {% endif %}
+</div>
+
+<!--<style>
+    .mid
+    {
+        width: 500px;
+        height: 400px;
+        overflow: hidden;
+        margin: 10px;
+        position: relative;
+    }
+
+    img {
+        position:absolute;
+        left: -300%;
+        right: -300%;
+        top: -300%;
+        bottom: -300%;
+        margin: auto;
+        min-height: 300%;
+        min-width: 300%;
+    }    
+</style>-->
+
+
+<a href="/img"><h4>Uploads image</h4></a>
+<form method="POST" action="." enctype="multipart/form-data" id="formUpload">
+    {% csrf_token %}
+<table>
+<!--        <tr>
+        <td>Name</td>
+        <td>{{ form.pic_name }}</td>
+    </tr>
+
+    <tr>
+        <td>Upload img</td>
+        <td>{{ form.photo }}</td>
+    </tr>
+    
+    <tr>
+        <td>upload_by</td>
+        <td>{{ form.upload_by }}</td>
+    </tr>        -->
+    <tr>
+        <td>{{form.as_p}}</td>
+    </tr>
+    <input type="submit" value="post">
+
+</table>
+</form>
+
+<div class="row">
+    {% for i in photo %}
+        <div class="col-sm-5 col-lg-5 col-md-5">
+            <div class="image">
+            <img src="{{ i.thumbs.url}}" style="border-radius: 8px;" class="imgcovser" width="60%" height="auto"><!--  width="60%" height=auto>-->
+            </div>
+        </div>
+        {% endfor %}
+                <!--<td><a href="{{i.photo.url}}">{{i.photo.name}}</a></td>-->
+        </div>  
+</div>    
+    {% endblock %}
+{% block script %}
+{% include 'css.html' %}
+{% include 'js.html' %}
+{% endblock %}

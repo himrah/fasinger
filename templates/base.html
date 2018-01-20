@@ -1,0 +1,75 @@
+{% load staticfiles %}
+<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta name="theme-color" content="orange" />
+    <title>{% block title %} {% endblock %}</title>
+    {% include 'css.html' %}
+
+    <style>
+    body{
+        background-color:whitesmoke;
+        position: relative;
+        margin: 0 auto;
+        flex: 1 0 auto;
+        display: flex;
+
+    }
+    ._head{
+        display: flex;
+        box-sizing: border-box;
+        z-index: 1050;
+        background-color: rgb(172, 240, 240);
+        width: 100%;
+        margin:auto;
+        top:0;
+        left:0;
+        right: 0;
+
+        overflow: hidden;
+        position:fixed;
+        display: block;
+    }
+    .header{
+        position: fixed;
+        left: 0;
+        color: black;
+        right: 0;
+        left: 0;
+        width:100%; 
+        text-align: center; 
+        background: white; 
+        padding-top: 1%; 
+        padding-bottom: 1%;
+
+    }
+    </style>
+    <head>
+            
+    </head>
+<!--    <center>
+            <div class="_heads">
+                <h3>Photo Gallery</h3>
+                <hr>
+            </div>  
+        </center>-->
+
+    <body>
+
+    <div class="header">
+            <h3 style="vertical-align: middle; color: black">Fasigner</h3>
+        </div>
+        <div class="home">
+
+
+
+            <div class="container" style="margin-top: 110px;">
+            <div>
+            {% block content %}
+            {% endblock %}
+            </div>
+        </div>
+    {% block script %}
+    {% endblock %}
+    
+    </body>
+</html>

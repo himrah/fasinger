@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% include 'css.html' %}
+{% include 'js.html' %}
+
+{% block title %}Create Photo{% endblock %}
+
+{% block script %}
+
+
+<!--
+<script>
+    $(function () {
+        /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+        $("#id_photo").change(function () {
+          if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              $("#image").attr("src", e.target.result);
+              $("#modalCrop").modal("show");
+            }
+            reader.readAsDataURL(this.files[0]);
+          }
+        });
+  
+        /* SCRIPTS TO HANDLE THE CROPPER BOX */
+       
+       
+        var $image = $("#image");
+        var cropBoxData;
+        var canvasData;
+        console.log($image)
+        $("#modalCrop").on("shown.bs.modal", function () {
+          $image.cropper({
+            viewMode: 1,
+            aspectRatio: 1/1,
+            strict: false,
+            movable : true,
+            scalable:true,
+            //minCropBoxWidth: 200,
+            //minCropBoxHeight: 200,
+            ready: function () {
+              $image.cropper("setCanvasData", canvasData);
+              $image.cropper("setCropBoxData", cropBoxData);
+            }
+          });
+        }).on("hidden.bs.modal", function () {
+          cropBoxData = $image.cropper("getCropBoxData");
+          canvasData = $image.cropper("getCanvasData");
+          $image.cropper("destroy");
+        });
+  
+        $(".js-zoom-in").click(function () {
+          $image.cropper("zoom", 0.1);
+        });
+  
+        $(".js-zoom-out").click(function () {
+          $image.cropper("zoom", -0.1);
+        });
+
+
+
+  
+        /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+        $(".js-crop-and-upload").click(function () {
+          var cropData = $image.cropper("getData");
+          $("#id_x").val(cropData["x"]);
+          $("#id_y").val(cropData["y"]);
+          $("#id_height").val(cropData["height"]);
+          $("#id_width").val(cropData["width"]);
+          $("#formUpload").submit();
+        });
+  
+      });
+  </script>
+-->
+
+{% endblock %}
+
+{% block content %}
+<style>
+    .mids
+    {
+        width: 250px;
+        height: 250px;
+        overflow: hidden;
+        margin: 10px;
+        position: relative;
+    }
+
+    .mid{
+      margin-bottom: 10px;
+    }
+    imgs {
+        
+        position:absolute;
+        left: -100%;
+        right: -100%;
+        top: -100%;
+        bottom: -100%;
+        margin: auto;
+        min-height: 100%;
+        min-width: 100%;
+        border-radius: 8px;
+    }    
+    img{
+      border-radius: 9px;
+      
+    }
+</style>
+
+
+
+<form method="POST" action="." enctype="multipart/form-data" id="formUpload">
+        {% csrf_token %}
+    <table>
+<!--        <tr>
+            <td>Name</td>
+            <td>{{ form.pic_name }}</td>
+        </tr>
+
+        <tr>
+            <td>Upload img</td>
+            <td>{{ form.photo }}</td>
+        </tr>
+        
+        <tr>
+            <td>upload_by</td>
+            <td>{{ form.upload_by }}</td>
+        </tr>        -->
+        <tr>
+            <td>{{form.as_p}}</td>
+        </tr>
+        <tr><td>
+        <input type="submit" class="btn btn-primary" value="post">
+          </td>
+          </tr>
+    </table>
+</form>
+
+<div class="row">
+        {% for i in photos %}
+        <div class="col-lg-4 col-md-5 col-sm-5">
+          <div style="margin-bottom:4px;margin-right:4px;" class="mid">
+            <a href="{{ i.original_photo.url }}"><img border=4  src="{{ i.thumbs.url}}" ></a>
+        </div>
+          </div>
+        {% endfor %}
+                <!--<td><a href="{{i.photo.url}}">{{i.photo.name}}</a></td>-->
+        
+</div>
+
+
+
+
+
+
+
+<div class="modal fade" id="modalCrop">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Crop the photo</h4>
+        </div>
+        <div class="modal-body">
+          <img src="" id="image" style="max-width: 100%;">
+        </div>
+        <div class="modal-footer">
+          <div class="btn-group pull-left" role="group">
+            <button type="button" class="btn btn-default js-zoom-in">
+              <span class="glyphicon glyphicon-zoom-in"></span>
+            </button>
+            <button type="button" class="btn btn-default js-zoom-out">
+              <span class="glyphicon glyphicon-zoom-out"></span>
+            </button>
+          </div>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+          <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
