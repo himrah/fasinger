@@ -64,6 +64,26 @@
         border-bottom: 2px solid rgb(226, 219, 223);
         sbox-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 0, 0, .6);
     }
+    #id_comment{
+        margin-top: 5px;
+        max-width: 90%;
+        min-width: 90%;
+
+        border: none;
+        max-height: 0.8cm;
+        min-height: 0.8cm;
+
+        border-bottom: 2px solid rgb(226, 219, 223);
+        
+    }
+
+    #id_comment:focus{
+        border-color: snow;
+        outline: 0;
+        border-bottom: 2px solid rgb(226, 219, 223);
+        sbox-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 0, 0, .6);
+    }
+
 
 </style>
 
@@ -81,7 +101,17 @@
             <img src="{{ p.original_photo.url }}" class="m_img"></a>
             <div class="img_footer">
                 <div class="img_header_title">
-                <input type="text" id="_comment">
+                        {% csrf_token %}
+                        {{cmt.comment}}
+                        <input type="button" value="post" class="post-btn" imgid="{{p.id}}" >
+                
+                <div class="commentss">
+                    {% for c in comments %}
+                        {% if p.photo_id == c.id %}
+                        <p>{{ c.comment }}</p><br>
+                        {% endif %}
+                        {% endfor %}
+                </div>    
                 </div>
             </div>
             
@@ -89,5 +119,19 @@
     {% endfor %}    
     </div>
 </div>
+{% endblock %}
 
+
+{% block script %}
+<script type="text/javascript">
+
+    $(document).on('click','.post-btn',function(e){
+            var cmt=$('#id_comment').val()
+            var id = $('.post-btn').attr('imgid')
+            
+            console.log(cmt)
+            console.log(id)
+    })
+
+</script>
 {% endblock %}

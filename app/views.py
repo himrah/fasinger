@@ -17,10 +17,32 @@ from django.contrib.auth import authenticate,login
     resize=cv.resize(image,dim,interpolation = cv.INTER_AREA)
     cv.imwrite("res.jpg",resize)"""
 
+def ajax_comment(request,p_id):
+    if request.method == 'POST':
+        form = Comment_form(request.POST)
+        if form.is_valid():
+            f = form.save(commit=False)
+            f.comment_by_id=request.user.id
+            f.photo_id_id = p_id
+            f.save()
+            return HttpResponse('OK')
+        else:
+            return HttpResponse('Not')
+
+
+
 
 def home(request):
-    photos = Photos.objects.all().order_by('-created_date')
-    return render(request,'home.html',{'photos':photos})
+    comment_form = Comment_form(request.POST)
+    comment = Comments.objects.all()
+    photos = Photos.objects.all().order_by('-created_date')            
+
+    data={
+        'photos':photos,
+        'cmt':comment_form,
+        'comments':comment,
+    }
+    return render(request,'home.html',data)
 
 def Gallery(request):
     #photo=Photos.objects.all()

@@ -68,9 +68,9 @@ class Photos(models.Model):
 
 class Comments(models.Model):
     photo_id = models.ForeignKey(Photos,on_delete=models.CASCADE,null=True)
-    upload_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='%(class)s_upload_by')
-    comment_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='%(class)s_comment_by')
-    comment = models.TextField(null=True)
+    #upload_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='%(class)s_upload_by')
+    comment_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    comment = models.CharField(max_length=100, null=True)
     def __str__(self):
         return str(self.photo_id)+' : '+str(self.comment_by)
     

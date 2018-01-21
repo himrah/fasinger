@@ -4,6 +4,7 @@
     <meta name="theme-color" content="orange" />
     <title>{% block title %} {% endblock %}</title>
     {% include 'css.html' %}
+     {% include "js.html" %}
 
     <style>
     body{
@@ -59,9 +60,6 @@
             <h3 style="vertical-align: middle; color: black">Fasigner</h3>
         </div>
         <div class="home">
-
-
-
             <div class="container" style="margin-top: 110px;">
             <div>
             {% block content %}
@@ -70,6 +68,5 @@
         </div>
     {% block script %}
     {% endblock %}
-    
     </body>
 </html>
