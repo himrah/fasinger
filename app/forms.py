@@ -38,6 +38,7 @@ class PhotoForm(forms.ModelForm):
 
 
 class Comment_form(forms.ModelForm):
+    comment = forms.CharField(label="Username", max_length=30, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Comment here...'}))
     class Meta:
         model = Comments
         fields = ('comment',)

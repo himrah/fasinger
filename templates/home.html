@@ -2,52 +2,66 @@
 
 {% block title %}Fasigner{% endblock %}
 {% block content %}
+
+<!--
 <style>
-    .main{
+    .mains{
         margin-left: 25%;
     }
-/*    @media screen and (min-width:480px){
+
+    @media screen and (min-width:300px){
+        
         .m_img{
-            width: 70%;
+            width: 100%;
         }
+        .main{
+            margin-left: 0px;
+        }
+        .img_header{
+            height:1.6cm;
+            border-radius: 1px;
+            border-top: aquamarine;
+            background:white;
+            padding-top: 2px;
+            border:5px;
+            width: 100%;
+            border-radius: 6px 6px 0px 0px;
+        }
+
+        .img_footer{
+        height:1.3cm;
+        background:white;
+        padding-top: 5px;
+        border:5px;
+        width: 100%;        
+        border-radius: 0px 0px 6px 6px;
     }
+
+
+    }
+
+    
     @media screen and (min-width:720px) {
-        .m_img{
-            width: 60%;
+        .img_con{
+            width: 50%;
+            margin-left: 40px;
+        }
+
+        .m_img{    
             border-radius: 0px 0px 8px 8px;
         }
-    }*/
-    .m_img{
-        width: 65%;
-        
     }
-    .img_header{
-        height:1.6cm;
-        border-radius: 1px;
-        border-top: aquamarine;
-        background:white;
-        padding-top: 2px;
-        border:5px;
-        width: 65%;
-        border-radius: 6px 6px 0px 0px;
-    }
+
+
+
+
     h4{
         line-height: 5px;
     }
     .img_header_title{
         margin-left: 10px;
     }
-    .img_con{
-        margin-bottom: 1.2cm;
-    }
-    .img_footer{
-        height:1.3cm;
-        background:white;
-        padding-top: 5px;
-        border:5px;
-        width: 65%;        
-        border-radius: 0px 0px 6px 6px;
-    }
+
     .time{
         font-size: 12px;
     }
@@ -73,19 +87,20 @@
         max-height: 0.8cm;
         min-height: 0.8cm;
 
-        border-bottom: 2px solid rgb(226, 219, 223);
+        bosrder-bottom: 2px solid rgb(226, 219, 223);
         
     }
 
     #id_comment:focus{
         border-color: snow;
         outline: 0;
-        border-bottom: 2px solid rgb(226, 219, 223);
+        bosrder-bottom: 2px solid rgb(226, 219, 223);
         sbox-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 0, 0, .6);
     }
 
+*/
+</style>-->
 
-</style>
 
 <div>
     <div class="main">
@@ -98,12 +113,12 @@
                 </div>
             </div>
             <a href="{{ p.original_photo.url }}">
-            <img src="{{ p.original_photo.url }}" class="m_img"></a>
+            <img src="{{ p.photo.url }}" class="m_img"></a>
             <div class="img_footer">
                 <div class="img_header_title">
                         {% csrf_token %}
                         {{cmt.comment}}
-                        <input type="button" value="post" class="post-btn" imgid="{{p.id}}" >
+                        <inpsut type="button" value="post" class="post-btn" imgid="{{p.id}}" >
                 
                 <div class="commentss">
                     {% for c in comments %}
@@ -125,12 +140,27 @@
 {% block script %}
 <script type="text/javascript">
 
+    function set_body_height() { // set body height = window height
+        $('body').height($(window).height());
+      }
+
+    $(document).ready(function() {
+        $(window).bind('resize', set_body_height);
+        set_body_height();
+      });
+
+
     $(document).on('click','.post-btn',function(e){
             var cmt=$('#id_comment').val()
-            var id = $('.post-btn').attr('imgid')
+            //var btn = $(this).find("input[type=button]:focus")
             
-            console.log(cmt)
-            console.log(id)
+            //var cmt = $(this).find("input[type=text]:focus")
+            //console.log(cmt)
+            console.log(cmt.prevObject[0])
+            //var id = $('.post-btn').attr('imgid')
+            
+            //console.log(cmt)
+            //console.log(id)
     })
 
 </script>

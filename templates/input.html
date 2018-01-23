@@ -140,8 +140,8 @@
 <div class="row">
         {% for i in photos %}
         <div class="col-lg-4 col-md-5 col-sm-5">
-          <div style="margin-bottom:4px;margin-right:4px;" class="mid">
-            <a href="{{ i.original_photo.url }}"><img border=4  src="{{ i.thumbs.url}}" ></a>
+          <div class="mid">
+            <a href="{{ i.original_photo.url }}"><img src="{{ i.thumbs.url}}" class="thumbimg"></a>
         </div>
           </div>
         {% endfor %}
