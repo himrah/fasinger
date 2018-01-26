@@ -1,167 +1,136 @@
 {% extends 'base.html' %}
 
-{% block title %}Fasigner{% endblock %}
+{% block title %}
+Fasinger
+{% endblock title %}
+
 {% block content %}
+<section class="home_section">
 
-<!--
-<style>
-    .mains{
-        margin-left: 25%;
-    }
-
-    @media screen and (min-width:300px){
-        
-        .m_img{
-            width: 100%;
-        }
-        .main{
-            margin-left: 0px;
-        }
-        .img_header{
-            height:1.6cm;
-            border-radius: 1px;
-            border-top: aquamarine;
-            background:white;
-            padding-top: 2px;
-            border:5px;
-            width: 100%;
-            border-radius: 6px 6px 0px 0px;
-        }
-
-        .img_footer{
-        height:1.3cm;
-        background:white;
-        padding-top: 5px;
-        border:5px;
-        width: 100%;        
-        border-radius: 0px 0px 6px 6px;
-    }
-
-
-    }
-
-    
-    @media screen and (min-width:720px) {
-        .img_con{
-            width: 50%;
-            margin-left: 40px;
-        }
-
-        .m_img{    
-            border-radius: 0px 0px 8px 8px;
-        }
-    }
-
-
-
-
-    h4{
-        line-height: 5px;
-    }
-    .img_header_title{
-        margin-left: 10px;
-    }
-
-    .time{
-        font-size: 12px;
-    }
-    #_comment{
-        margin-top: 5px;
-        width: 90%;
-        border: none;
-        height:2em;
-        border-bottom: 2px solid rgb(226, 219, 223);
-    }
-    #_comment:focus{
-        border-color: snow;
-        outline: 0;
-        border-bottom: 2px solid rgb(226, 219, 223);
-        sbox-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 0, 0, .6);
-    }
-    #id_comment{
-        margin-top: 5px;
-        max-width: 90%;
-        min-width: 90%;
-
-        border: none;
-        max-height: 0.8cm;
-        min-height: 0.8cm;
-
-        bosrder-bottom: 2px solid rgb(226, 219, 223);
-        
-    }
-
-    #id_comment:focus{
-        border-color: snow;
-        outline: 0;
-        bosrder-bottom: 2px solid rgb(226, 219, 223);
-        sbox-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(0, 0, 0, .6);
-    }
-
-*/
-</style>-->
-
-
-<div>
-    <div class="main">
-    {% for p in photos %}
-        <div class="img_con">
-            <div class="img_header">
-                <div class="img_header_title">
-                <h4>Uploaded By {{p.upload_by}}</h4>
-                <p class="time">{{ p.created_date.time }}</p>
-                </div>
-            </div>
-            <a href="{{ p.original_photo.url }}">
-            <img src="{{ p.photo.url }}" class="m_img"></a>
-            <div class="img_footer">
-                <div class="img_header_title">
-                        {% csrf_token %}
-                        {{cmt.comment}}
-                        <inpsut type="button" value="post" class="post-btn" imgid="{{p.id}}" >
-                
-                <div class="commentss">
-                    {% for c in comments %}
-                        {% if p.photo_id == c.id %}
-                        <p>{{ c.comment }}</p><br>
-                        {% endif %}
-                        {% endfor %}
-                </div>    
-                </div>
-            </div>
-            
+    <div class="left">
+        <div class="left-content">
+            left content
         </div>
-    {% endfor %}    
+
     </div>
-</div>
+
+    <div class="middle">
+        {% for p in photos %}
+            <article class="article">
+                    <header class="img_header">
+                        <div class="img_header_title">
+                        <h4>Uploaded By {{p.upload_by}}</h4>
+                        <p class="times"> {{p.created_date.date}} at {{ p.created_date.time }}</p>
+                        </div>
+                    </header>
+                    
+                    <div class="img_content">
+                        <a href="{{ p.original_photo.url }}">
+                                <img src="{{ p.photo.url }}" class="m_img">
+                        </a>
+                    </div>
+
+                    <div class="img_footer">
+                        <div class="comment_box">
+                                {% csrf_token %}
+                                {{cmt.comment}}
+                                <inpsut type="button" value="post" class="post-btn" imgid="{{p.id}}" >
+                        </div>            
+                        <div class="comments">
+                            {% for c in comments %}
+                                {% if p.photo_id == c.id %}
+                                <p>{{ c.comment }}</p><br>
+                                {% endif %}
+                                {% endfor %}
+                        </div>    
+                    </div>
+            </article>
+        {% endfor %}
+    </div>
+    
+    <div class="right">
+        <div class="right-content">
+            Right content
+        </div>        
+    </div>
+
+</section>
 {% endblock %}
 
 
 {% block script %}
 <script type="text/javascript">
 
-    function set_body_height() { // set body height = window height
-        $('body').height($(window).height());
-      }
+    /*
+    console.log("hello world");
+    $(window).load(function(){
+        var w = $(window).width()
+        if(w<700){
+            $('.home_section').addClass('.home_section_small')      
+        }
+    });
 
-    $(document).ready(function() {
-        $(window).bind('resize', set_body_height);
-        set_body_height();
+    $(window).resize(function(){
+
+        var w = $(window).width()
+        if(w<700){
+            $('.home_section').addClass('.home_section_small')
+        }
+    });*/
+
+
+
+
+
+    $(document).ready(function($) {
+
+
+/*        var wrap = $(".home_section");
+        wrap.on("scroll", function(e) {
+            console.log('scrolll')
+          if (this.scrollTop > 10) {
+            $('.left-content').addClass("fix_side");
+          } else {
+            $('.left-content').removeClass("fix_side");
+          }
+        });
+*/
+        var fix = $('.main').offset().top;
+        $(window).scroll(function(){
+
+            var currentScroll = $(window).scrollTop();
+            if(currentScroll>=fix){
+                $('.left-content').addClass('fix_side')
+                $('.right-content').addClass('fix_side')
+            }
+            else{
+                $('.left-content').removeClass('fix_side')
+                $('.right-content').removeClass('fix_side')
+            }
+        })
+
+
+        var alterClass = function() {
+          var ww = document.body.clientWidth;
+          if (ww < 1100) {
+              
+            $('.home_section').addClass('home_section_small');
+            $('.left').hide()
+            $('.right').hide()
+          } else if (ww > 1100) {
+              
+            $('.home_section').removeClass('home_section_small');
+            $('.left').show()
+            $('.right').show()
+          };
+        };
+        $(window).resize(function(){
+          alterClass();
+        });
+        //Fire it when the page first loads:
+        alterClass();
       });
 
-
-    $(document).on('click','.post-btn',function(e){
-            var cmt=$('#id_comment').val()
-            //var btn = $(this).find("input[type=button]:focus")
-            
-            //var cmt = $(this).find("input[type=text]:focus")
-            //console.log(cmt)
-            console.log(cmt.prevObject[0])
-            //var id = $('.post-btn').attr('imgid')
-            
-            //console.log(cmt)
-            //console.log(id)
-    })
 
 </script>
 {% endblock %}

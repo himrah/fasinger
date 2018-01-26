@@ -45,8 +45,8 @@ class Comment_form(forms.ModelForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(label="Username", max_length=30, widget=forms.TextInput(attrs={'class': 'form-control', 'name': 'username'}))
-    password = forms.CharField(label="Password", max_length=30, widget=forms.TextInput(attrs={'class': 'form-control', 'name': 'password','type':'password'}))
+    username = forms.CharField(label="Username", max_length=30, widget=forms.TextInput(attrs={'class': 'form-control', 'name': 'username','placeholder':'Username'}))
+    password = forms.CharField(label="Password", max_length=30, widget=forms.TextInput(attrs={'class': 'form-control', 'name': 'password','type':'password','placeholder':'Password'}))
 
     def clean(self,*args,**kwargs):
         username =self.cleaned_data.get('username')

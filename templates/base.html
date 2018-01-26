@@ -2,35 +2,26 @@
 <html>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <meta name="theme-color" content="orange" />
-    <title>{% block title %} {% endblock %}</title>
-     {% include "js.html" %}
-     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
 
-    <head>
-            
-    </head>
-<!--    <center>
-            <div class="_heads">
-                <h3>Photo Gallery</h3>
-                <hr>
-            </div>  
-        </center>-->
-
-    <body>
-    <div class="header">
-            <a href="/home"> <h3 style="vertical-align: middle; color: black">Fasigner</h3></a>
-    </div>
-
-    <div class="home">
-            <div class="container">
-            <div>
-            {% block content %}
-            {% endblock %}
-            </div>
+    <title>{% block title %}
+{% endblock%}</title>
+<body>
+    <section class="top">
+        <nav class="nav">
+            <div class="navdiv">
+            <span class="header_font">Fasinger</span>
         </div>
-    </div>
-       
+        </nav>
+    
+        <main class=main>
+            {% block content %}
+
+            {% endblock %}
+        </main>
+    </section>
     {% block script %}
+    
     {% endblock %}
-    </body>
 </html>
