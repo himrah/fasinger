@@ -251,3 +251,122 @@ z-index: 1;
 transition: height .2s ease-in-out;
 height: 50px;
 }
+
+
+
+
+
+
+
+
+body{
+    font-family: Arial, Helvetica, sans-serif; font-size:12pt; } 
+.btn{
+    margin-top: 12px;
+    border: none;
+    height:2.3em;
+    width: 100%;
+    border: 1px solid rgb(226, 219, 223);
+}
+.btn:hover{
+    border: 1px solid rgb(207, 155, 58);   
+}
+
+.btn:focus{
+    border: 1px solid rgb(207, 155, 58);  
+}
+.container{
+    width: 90%;
+}
+.form-control{
+    margin-top: 5px;
+    width: 100%;
+    font-size: 15px;
+    padding: 5px;
+    border: none;  
+    height:3em;
+    border-bottom: 1px solid rgb(226, 219, 223);        
+
+    /*        border-bottom: 2px solid rgb(226, 219, 223);*/
+}
+.form-control:focus{
+    border-color: white;
+    outline: 0;
+    border-bottom: 1px solid rgb(207, 155, 58);        
+}
+.form-control:hover{
+    border-bottom: 1px solid rgb(207, 155, 58);   
+}
+.form-control:-moz-placeholder{
+    font-size: 10px;
+}
+
+
+/*    @media screen and (min-width:720px) {
+
+.main_form{
+width: 100%;
+}
+.fom{
+    margin-top: 50px;
+    width: 70%;
+}
+.pos{
+    margin-left: auto;
+    margin-right: auto;
+    height: 50%;
+    width: 40%;
+    margin-top: 7%;
+}
+
+}
+@media screen and (min-width:100px) {
+    .fom{
+        height: 40%;
+        margin-top: 100px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+}*/
+
+.login_box{
+    max-width: 500px;
+    /*max-width: 335px;*/
+}
+.section-login{
+    max-width: 500px;
+    
+    margin: 0px auto;
+    
+}
+.main-login{
+    height: auto;
+    background: white;
+    padding-top: 60px;
+}
+.optional{
+    margin-top: 5px;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-flow: row nowrap;
+
+}
+.signup{
+    max-width: 250px;
+    padding-left: 10px;
+}
+.forget{
+    padding-right: 10px;
+    max-width: 250px;
+}
+._sup{
+    text-align: left;
+}
+._fgps{
+    text-align: right;
+}

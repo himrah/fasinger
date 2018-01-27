@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}Registration{% endblock %}
+{% block content %}
+<style>
+    .row{
+        flex-flow: row nowrap;
+    }
+    .rowleft{
+        width: 215px;
+    }
+    .rowright{
+        width: 80px;
+        padding: 20px;
+    }
+</style>
+<div class="main-login">
+<section class="section-login">
+    <div class="login_box">
+        {{form.username}}
+        {{form.first_name}}
+        {{form.last_name}}
+        {{form.email}}
+        {{form.password1}}
+        {{form.password2}}
+<!--
+        <form action='/registration' method="post">
+             {% csrf_token %}
+             
+             <div class="row">
+                 <div class="rowleft">
+                    {{form.username}}
+                 </div>
+                 <div class="rowright">
+                     Error
+                 </div>            
+            </div>
+
+            <div class="row">
+                <div class="rowleft">
+                    {{form.first_name}}
+                </div>
+                <div class="rowright">
+                    Error
+                </div>            
+            </div>
+
+            <div class="row">
+                <div class="rowleft">
+                        {{form.last_name}}
+                </div>
+                <div class="rowright">
+                    Error
+                </div>            
+            </div>
+
+            <div class="row">
+                <div class="rowleft">
+                    {{form.email}}
+                </div>
+                <div class="rowright">
+                    Error
+                </div>            
+            </div>
+
+            <div class="row">
+                <div class="rowleft">
+                        {{form.password1}}
+                    </div>
+                    <div class="rowright">
+                        Error
+                    </div>            
+                </div>
+                
+            <div class="row">
+                    <div class="rowleft">
+                            {{form.password2}}
+                        </div>
+                        <div class="rowright">
+                            Error
+                        </div>            
+                    </div>
+                
+    
+
+                -->
+       
+
+<!--             <input type="text" class="form-control" placeholder="Enter Username">
+             <input type="text" class="form-control" placeholder="First Name">
+             <input type="text" class="form-control" placeholder="Last Name">
+             <input type="text" class="form-control" placeholder="Email Address">
+             <input type="text" class="form-control" placeholder="Password">
+             <input type="text" class="form-control" placeholder="Password Repeat">-->
+             <input type="submit" value="Sign Up" class="btn">
+             <div style="text-align:center;margin-top:5px;">
+             <span><a href="#">Already Memeber</a></span>
+             </div>
+            </form>
+    </div> 
+    <div class="error_msg">
+
+    </div>   
+</section>
+</div>
+{% endblock %}

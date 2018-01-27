@@ -17,6 +17,46 @@ from django.contrib.auth import authenticate,login
     resize=cv.resize(image,dim,interpolation = cv.INTER_AREA)
     cv.imwrite("res.jpg",resize)"""
 
+def registration(request):
+    form=Registrationform(request.POST or None)
+    
+    if request.method=='POST':
+        if form.is_valid():
+     #       print("valiiddd")
+            form.save()
+            return HttpResponse('OK')
+        else:
+            print("this is else part")
+            ems=str(request.POST.get('username'))
+            u=request.POST.get('email')
+            #print(type(ems))
+            l=str(u)
+            u=str(ems)
+            #print(User.objects.filter(email=l))
+            print(u)
+            print(User.objects.filter(email=l))
+
+            #print(User.objects.filter(username=u))
+            #ems = cleaned_data.get('email')
+            #u = self.cleaned_data.get('username')
+
+            if User.objects.filter(username=u):
+                return HttpResponse('user')
+                #raise forms.ValidationError("Username Already exist")
+            elif User.objects.filter(email=l):
+                return HttpResponse('email')
+                #raise forms.ValidationError("Email already exist")
+            else:
+                form.save()
+                print(form)
+                #return HttpResponseRedirect('/accounts/login')
+                return HttpResponse('OK')
+            #return HttpResponse('error')
+
+    return render(request,'registration/registration.html',{'form':form})
+    #return render(request,'registration/registration.html')
+
+
 def ajax_comment(request,p_id):
     if request.method == 'POST':
         form = Comment_form(request.POST)

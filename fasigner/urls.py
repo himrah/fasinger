@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^login',Login,name='login'),
     url(r'^auth',auth,name='auth'),
     url(r'^home',home,name='home'),
+    url(r'registration',registration,name='registration')
     #url(r'^uploading$',uploading,name="img-uploading"),
 ]
 if settings.DEBUG:
