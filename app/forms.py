@@ -68,10 +68,14 @@ class PhotoForm(forms.ModelForm):
 
 
 class Comment_form(forms.ModelForm):
-    comment = forms.CharField(label="Username", max_length=30, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Comment here...'}))
+    #comment = forms.Textarea(attrs={'class': 'form-control', 'placeholder':'Username'}) 
+    #comment = forms.CharField(label="Username", max_length=30, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Comment here...'}))
     class Meta:
         model = Comments
         fields = ('comment',)
+        widgets={
+            'comment':Textarea(attrs={'class':'form-control','placeholder':'Comment here...','data-resizable':'true'}),
+        }
 
 
 class LoginForm(AuthenticationForm):

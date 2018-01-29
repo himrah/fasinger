@@ -14,7 +14,7 @@ class Photos(models.Model):
     thumbs = models.ImageField(upload_to='photos/thumbs/')
     photo = models.ImageField(upload_to='photos/photo')
     created_date=models.DateTimeField(default=datetime.now,null=True)
-    comment=models.TextField()
+    #comment=models.TextField()
     upload_by=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     def __str__(self):
         return str(self.upload_by)+' : '+str(self.created_date)
@@ -82,9 +82,11 @@ class Photos(models.Model):
 
 class Comments(models.Model):
     photo_id = models.ForeignKey(Photos,on_delete=models.CASCADE,null=True)
+    comment_time = models.DateTimeField(default=datetime.now,null=True)
     #upload_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='%(class)s_upload_by')
     comment_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
-    comment = models.CharField(max_length=100, null=True)
+    #comment = models.CharField(max_length=100, null=True)
+    comment = models.TextField()
     def __str__(self):
         return str(self.photo_id)+' : '+str(self.comment_by)
     

@@ -12,94 +12,159 @@
         width: 80px;
         padding: 20px;
     }
+    .lbl{
+        font-size: 14px;
+        text-align: center;
+        color:red;
+    }
+
 </style>
 <div class="main-login">
 <section class="section-login">
     <div class="login_box">
-        {{form.username}}
-        {{form.first_name}}
-        {{form.last_name}}
-        {{form.email}}
-        {{form.password1}}
-        {{form.password2}}
-<!--
-        <form action='/registration' method="post">
-             {% csrf_token %}
-             
-             <div class="row">
-                 <div class="rowleft">
-                    {{form.username}}
-                 </div>
-                 <div class="rowright">
-                     Error
-                 </div>            
-            </div>
-
-            <div class="row">
-                <div class="rowleft">
-                    {{form.first_name}}
-                </div>
-                <div class="rowright">
-                    Error
-                </div>            
-            </div>
-
-            <div class="row">
-                <div class="rowleft">
-                        {{form.last_name}}
-                </div>
-                <div class="rowright">
-                    Error
-                </div>            
-            </div>
-
-            <div class="row">
-                <div class="rowleft">
-                    {{form.email}}
-                </div>
-                <div class="rowright">
-                    Error
-                </div>            
-            </div>
-
-            <div class="row">
-                <div class="rowleft">
-                        {{form.password1}}
-                    </div>
-                    <div class="rowright">
-                        Error
-                    </div>            
-                </div>
-                
-            <div class="row">
-                    <div class="rowleft">
-                            {{form.password2}}
-                        </div>
-                        <div class="rowright">
-                            Error
-                        </div>            
-                    </div>
-                
-    
-
-                -->
-       
-
-<!--             <input type="text" class="form-control" placeholder="Enter Username">
-             <input type="text" class="form-control" placeholder="First Name">
-             <input type="text" class="form-control" placeholder="Last Name">
-             <input type="text" class="form-control" placeholder="Email Address">
-             <input type="text" class="form-control" placeholder="Password">
-             <input type="text" class="form-control" placeholder="Password Repeat">-->
-             <input type="submit" value="Sign Up" class="btn">
-             <div style="text-align:center;margin-top:5px;">
-             <span><a href="#">Already Memeber</a></span>
-             </div>
-            </form>
-    </div> 
-    <div class="error_msg">
 
     </div>   
 </section>
 </div>
+{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript">
+    $(document).on("submit","#reg",function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url:'/accounts',
+            data:{
+                username:$('#id_username').val(),
+                first_name:$('#id_first_name').val(),
+                last_name:$('#id_last_name').val(),
+                password1:$('#id_password1').val(),
+                password2:$('#id_password2').val(),
+                email:$('#email').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()                
+            },
+            beforeSend:function(){
+                $('#signupbtn').val("please wait...")
+            },
+            complete:function(){
+              $('#signupbtn').val('Sign Up')  
+            },
+            success:function(e){
+                if(e=='user'){
+                    var us = $('#id_username').val()
+                    d=us+" is already exist choose another"
+                    console.log(us)
+                    console.log(d)
+                    $('#emailerror').empty()
+                    $('#usererror').text(d)
+                }
+                else if(e=='email'){
+                    $('#usererror').empty()
+                    $('#emailerror').text("this email already exist")
+                }
+                else if(e=='ok'){
+                    window.location.href = '/login/'
+                }
+            }
+
+        })
+    });
+</script>
+{% endblock %}
+
+
+{% block backbone %}
+
+<script type="text/template" id='login-form'>
+    <form action="/auth/" method="post">
+        {% csrf_token %}
+            <div>
+                {{login_form.username}}
+            </div>
+            <div>
+                {{login_form.password}}
+            </div>
+            <input type="submit" class="btn" value=login >
+            <div class="optional">
+                <div class="signup">
+                    <span class="_sup"><a href="#registration">Sign Up</a></span>
+                </div>
+                <div class="forget">
+                    <span class="_fgps"><a href="#">Forget Password ?</a></span>
+                </div>
+            </div>
+    </form>
+</script>
+
+
+
+
+<script type="text/template" id='registration-form'>
+    <form action="/registration" method="post" id="reg">
+        {% csrf_token %}
+    <div class="grp">
+        <div class="frmc">
+            {{form.username}}
+        </div>
+        <span id="usererror" class="lbl"></span>
+    </div>
+    {{form.first_name}}
+    {{form.last_name}}
+    <div class="grp">
+        <div class="frmc">
+            {{form.email}}
+        </div>
+        <span id="emailerror" class="lbl"></span>
+    </div>
+    {{form.password1}}
+    {{form.password2}}
+         <input type="submit" value="Sign Up" id="signupbtn" class="btn">
+         <div style="text-align:center;margin-top:5px;">
+         <span><a href="#login">Already Memeber</a></span>
+         </div>
+        </form>
+</script>
+
+<script>
+
+
+    var Preview = Backbone.View.extend({
+        login:function(e){
+            var template = _.template($('#login-form').html())
+            $('.login_box').html(template())
+        },
+        registration:function(e){
+            var template = _.template($('#registration-form').html())
+            $('.login_box').html(template())
+        }
+    })
+
+
+    pview = new Preview()
+
+
+
+    var Router = Backbone.Router.extend({
+        routes:{
+        '':'home',
+        'login':'login',
+        'registration':'registration'
+        }
+    });
+    var router = new Router()
+    router.on('route:home',function(){
+        console.log('home')
+        pview.registration()
+    });
+    router.on('route:login',function(){
+        console.log('login')
+        pview.login()
+    })
+    router.on('route:registration',function(){
+        pview.registration()
+    })
+    Backbone.history.start();
+</script>
 {% endblock %}

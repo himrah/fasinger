@@ -3,18 +3,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <meta name="theme-color" content="orange" />
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'jquery.js' %}"></script>
+<!--    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>-->
+    {% include 'backbone.html' %}
 
     <title>{% block title %}
 {% endblock%}</title>
+
+<style>
+    .brands{
+        padding: 3px;
+    }
+    .profile_info{
+        width: 50%;
+        text-align: right;
+        display: flex;
+        flex-flow: row nowrap;;        
+    }
+    .brand{
+        width: 50%;
+    }
+    .navdiv{
+        display: flex;
+        flex-flow: row nowrap;;
+    }
+    .top_p{
+        float: right;
+        padding:12px;
+        max-width: 90px;
+    }
+
+</style>
+
 <body>
     <section class="top">
         <nav class="nav">
             <div class="navdiv">
-            <span class="header_font">Fasinger</span>
-        </div>
+                <div class="brand">
+                    <span class="header_font">
+                        <a href="/home"><span style="color:orange">Fasigner</span></a>
+                    </span>
+                </div>    
+                <div class="profile_info" >
+                    
+                    <span class="top_p"><a href="/home">Home</a></span>
+                    <span class="top_p"><a href="/">Upload</a></span>
+                </div>
+            </div>
         </nav>
     
+        
         <main class=main>
             {% block content %}
 
@@ -22,6 +60,10 @@
         </main>
     </section>
     {% block script %}
+    
+    {% endblock %}
+
+    {% block backbone %}
     
     {% endblock %}
 </html>

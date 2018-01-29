@@ -5,6 +5,30 @@ Fasinger
 {% endblock title %}
 
 {% block content %}
+
+<style>
+    .show_comments{
+        padding: 5px;
+        font-size:14px;
+    }
+    ._cmt_box{
+        padding: 5px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 500;
+    }
+    ._cmt{
+
+    }
+    textarea{
+        overflow: hidden;
+        resize: none;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .comment_box{
+        height: auto;
+    }
+</style>
+
 <section class="home_section">
 
     <div class="left">
@@ -31,18 +55,32 @@ Fasinger
                     </div>
 
                     <div class="img_footer">
-                        <div class="comment_box">
-                                {% csrf_token %}
-                                {{cmt.comment}}
-                                <inpsut type="button" value="post" class="post-btn" imgid="{{p.id}}" >
-                        </div>            
-                        <div class="comments">
+
+                        <div class="show_comments">
                             {% for c in comments %}
-                                {% if p.photo_id == c.id %}
-                                <p>{{ c.comment }}</p><br>
+                                {% if p.id == c.photo_id_id %}
+                                <div class="_cmt_box">
+                                    <span class="_uname">
+                                        <a href="/user/{{ c.comment_by.username }}"><span style="color:black;font-weight:bold;margin-right:3px;">{{ c.comment_by.username }}</span></a> 
+                                        <span class="_cmt">
+                                            {{c.comment}} :-
+                                        </span>
+                                        <span class="_cmt_time" style="font-weight:700;font-style:italic;">
+                                            {{c.comment_time}}
+                                        </span>
+                                    </span>
+                                    
+                                </div>
                                 {% endif %}
                                 {% endfor %}
                         </div>    
+
+                        <div class="comment_box">
+                                {% csrf_token %}
+                                {{cmt.comment}}
+                                
+                                <!--<inpsut type="button" value="post" class="post-btn" imgid="{{p.id}}" >-->
+                        </div>            
                     </div>
             </article>
         {% endfor %}
@@ -79,11 +117,41 @@ Fasinger
     });*/
 
 
+/*
+    function resizeTextarea(id) {
+        var a = document.getElementById(id);
+        a.style.height = 'auto';
+        a.style.height = a.scrollHeight+'px';
+      }
+      
+      function init() {
+        var a = document.getElementsByTagName('textarea');
+        
+        for(var i=0,inb=a.length;i<inb;i++) {
+           if(a[i].getAttribute('data-resizable')=='true') 
+           resizeTextarea(a[i].id);
+        }
+      }
+      addEventListener('DOMContentLoaded', init);*/
 
 
 
-    $(document).ready(function($) {
+      $(document).ready(function($) {
+        
+        
+      $('textarea').on('change',function(e){
+          console.log(e)
+      })  
 
+        
+      /*  $("#id_comment").keypress(function (e) {
+            if(e.which == 13 && !e.shiftKey) {        
+                console.log($("#id_comment").val())
+                //$(this).closest("form").submit();
+                e.preventDefault();
+                return false;
+            }
+        });*/
 
 /*        var wrap = $(".home_section");
         wrap.on("scroll", function(e) {
@@ -130,6 +198,10 @@ Fasinger
         //Fire it when the page first loads:
         alterClass();
       });
+
+
+
+
 
 
 </script>

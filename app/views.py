@@ -19,22 +19,23 @@ from django.contrib.auth import authenticate,login
 
 def registration(request):
     form=Registrationform(request.POST or None)
-    
+    login_form=LoginForm()
+    c={'form':form,'login_form':login_form}
     if request.method=='POST':
         if form.is_valid():
      #       print("valiiddd")
             form.save()
-            return HttpResponse('OK')
+            return HttpResponse('ok')
         else:
-            print("this is else part")
+            #print("this is else part")
             ems=str(request.POST.get('username'))
             u=request.POST.get('email')
             #print(type(ems))
             l=str(u)
             u=str(ems)
             #print(User.objects.filter(email=l))
-            print(u)
-            print(User.objects.filter(email=l))
+            #print(u)
+            #print(User.objects.filter(email=l))
 
             #print(User.objects.filter(username=u))
             #ems = cleaned_data.get('email')
@@ -48,12 +49,13 @@ def registration(request):
                 #raise forms.ValidationError("Email already exist")
             else:
                 form.save()
-                print(form)
+                #print(form)
+                return HttpResponse('new')
                 #return HttpResponseRedirect('/accounts/login')
-                return HttpResponse('OK')
+                #return HttpResponseRedirect('/login')
             #return HttpResponse('error')
 
-    return render(request,'registration/registration.html',{'form':form})
+    return render(request,'registration/registration.html',c)
     #return render(request,'registration/registration.html')
 
 
@@ -76,7 +78,7 @@ def home(request):
     comment_form = Comment_form(request.POST)
     comment = Comments.objects.all()
     photos = Photos.objects.all().order_by('-created_date')            
-
+    
     data={
         'photos':photos,
         'cmt':comment_form,
@@ -87,6 +89,12 @@ def home(request):
 def Gallery(request):
     #photo=Photos.objects.all()
     photo=Photos.objects.all().order_by('-created_date')
+    photo_list=[]
+    counter = 0
+    while counter<len(photo):
+        photo_list.append([p for p in photo[counter:counter+3]])
+        counter+=3
+    
     if request.method == 'POST':
         form = PhotoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -99,7 +107,7 @@ def Gallery(request):
             HttpResponse("unvalid")
     else:
         form = PhotoForm()
-        c={'form':form,'photos':photo}
+        c={'form':form,'photos':photo_list}
         return render(request,'input.html',c)
 
 """def Input(request):
