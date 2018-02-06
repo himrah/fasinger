@@ -31,6 +31,41 @@
 
 {% block script %}
 <script type="text/javascript">
+
+    $(document).on('submit','#login_form',function(e){
+        e.preventDefault()
+        $.ajax({
+            type:'POST',
+            url:'/auth/',
+            data:{
+                username:$('#id_username').val(),
+                password:$('#id_password').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+            },
+            beforeSend:function(){
+                $('#lgnbtn').val("please wait...")
+            },
+            complete:function(){
+                $('#lgnbtn').val("Login")
+            },
+            success:function(e){
+                if(e=='user'){
+                    $('#passworderror').empty()
+                    $('#usererror').text("username is not correct")
+                }
+                else if(e=='password')
+                {
+                    $('#usererror').empty()
+                $('#passworderror').text("Password is incorrect")
+                }
+                else if(e=='ok'){
+                    window.location.href="/"
+                }
+            }
+        })
+    })
+
+
     $(document).on("submit","#reg",function(e){
         e.preventDefault();
         $.ajax({
@@ -78,15 +113,23 @@
 {% block backbone %}
 
 <script type="text/template" id='login-form'>
-    <form action="/auth/" method="post">
+    <form action="/auth/" method="post" id="login_form">
         {% csrf_token %}
-            <div>
+        <div class="grp">
+            <div class="frmc">
                 {{login_form.username}}
             </div>
-            <div>
+            <span id="usererror" class="lbl"></span>
+        </div>
+
+        <div class="grp">
+            <div class="frmc">
                 {{login_form.password}}
             </div>
-            <input type="submit" class="btn" value=login >
+            <span id="passworderror" class="lbl"></span>
+        </div>
+
+            <input type="submit" class="btn" id="lgnbtn" value="Login">
             <div class="optional">
                 <div class="signup">
                     <span class="_sup"><a href="#registration">Sign Up</a></span>
@@ -95,6 +138,10 @@
                     <span class="_fgps"><a href="#">Forget Password ?</a></span>
                 </div>
             </div>
+        <div style="align:center;">
+            <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+        </div>    
+
     </form>
 </script>
 

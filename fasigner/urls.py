@@ -18,16 +18,41 @@ from django.contrib import admin
 #from fasigner.settings import *
 from app.views import *
 from django.conf import settings
+from rest_framework import routers
+from rest_framework.authtoken import views as authtoken_views
 from django.conf.urls.static import static
+from graphene_django.views import GraphQLView
+from schema import schema
+#import schema
+
+router=routers.DefaultRouter()
+router.register('comment',CommentSet),
+router.register('user',UserSet),
+router.register('photo',PhotoSet),
 
 urlpatterns = [
+    #graphiql=True,
+    url(r'^graphql', GraphQLView.as_view(graphiql=True,schema=schema)),
+    
+    url(r'abc',PhotoSS.as_view()),
+
+    url(r'^api/',include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^img$',Input,name="input-img"),
     url(r'^$',Gallery,name='gallery'),
     url(r'^login',Login,name='login'),
+    url(r'^logout',Logout,name='logout'),
     url(r'^auth',auth,name='auth'),
     url(r'^home',home,name='home'),
-    url(r'accounts',registration,name='registration')
+    url(r'^getcomment/(?P<p_id>.*)/',get_comment,name='getcomment'),
+    #url(r'^profile',profile,name='profile'),
+    url(r'^accounts',registration,name='registration'),
+    url(r'^comment/(?P<p_id>.*)/',ajax_comment,name='comment'),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
+    url(r'^profile/(?P<pk>.*)/',profile,name='profile'),
+    #url(r'^profile/$',UpdateProfile,name='updateprofile'),
+    url(r'^updateprofile/$',UpdateProfile,name='updateprofile'),
+    url(r'^updatepic/$',UpdateProfilePic,name='updateprofilepic'),
     #url(r'^uploading$',uploading,name="img-uploading"),
 ]
 if settings.DEBUG:

@@ -39,6 +39,24 @@ class ImageInputForm(forms.ModelForm):
         model = Photos
         fields = ('original_photo',)
 
+class ProfileForm(forms.ModelForm):
+    #birth_day = forms.DateField(widget=forms.DateInput(format='%m/%d/%Y')), input_formats=('%m/%d/%Y',))
+    
+    birth_day = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class':'form-control'},format='%m/%d/%Y'),input_formats=('%Y-%m-%d',))
+    class Meta:
+        model = Profile
+        fields =  ('about','birth_day')
+        widgets={
+            'about':Textarea(attrs={'class':'form-control','placeholder':'Tell us about your...','data-resizable':'true'}),
+        }
+
+
+class ProfilePicForm(forms.ModelForm):
+    class Meta:
+        model = Profile_pic
+        fields = ('profile_original',)        
+
+
 
 class PhotoForm(forms.ModelForm):
     #x = forms.FloatField(widget=forms.HiddenInput())

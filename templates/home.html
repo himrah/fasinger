@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block title %}
 Fasinger
 {% endblock title %}
@@ -7,26 +7,53 @@ Fasinger
 {% block content %}
 
 <style>
+    .border{
+        border: none;
+        border-bottom: 1px solid rgb(243, 242, 240);
+        border-top: 1px solid rgb(243, 242, 240);
+    }
     .show_comments{
         padding: 5px;
+        font-variant:initial;
+        font-family:monospace;
         font-size:14px;
     }
     ._cmt_box{
         padding: 5px;
         font-family: Arial, Helvetica, sans-serif;
-        font-weight: 500;
+        /*font-weight: 500;*/
     }
-    ._cmt{
-
+    span{
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .form-control{
+        height: 2.2em;
+        border-bottom: none;
+    }
+    .form-control:focus,.form-control:hover{
+        border-bottom: none;
     }
     textarea{
         overflow: hidden;
         resize: none;
+        max-width: 550px;
+        padding: 0;
         font-family: Arial, Helvetica, sans-serif;
     }
     .comment_box{
         height: auto;
+        flex-flow: row nowrap;
     }
+    .pstbtn{
+        color:orange;
+        cursor: pointer;
+        font-size: 17px;
+        background: white;
+        border: orange;
+        outline: none;
+        max-width: 50px;
+    }
+
 </style>
 
 <section class="home_section">
@@ -57,33 +84,45 @@ Fasinger
                     <div class="img_footer">
 
                         <div class="show_comments">
-                            {% for c in comments %}
-                                {% if p.id == c.photo_id_id %}
-                                <div class="_cmt_box">
+
+                            {% for c in p.comments_set.all|slice:"5"|dictsortreversed:"comment_time" %} 
+
+                            <div class="_cmt_box">
                                     <span class="_uname">
-                                        <a href="/user/{{ c.comment_by.username }}"><span style="color:black;font-weight:bold;margin-right:3px;">{{ c.comment_by.username }}</span></a> 
-                                        <span class="_cmt">
+                                        <a href="/{{ c.comment_by.username }}"><span style="color:black;font-weight:bold;margin-right:3px;">{{ c.comment_by.get_full_name }}</span></a> 
+                                        <span class="_cmt" style="font-weight:normal;">
                                             {{c.comment}} :-
                                         </span>
-                                        <span class="_cmt_time" style="font-weight:700;font-style:italic;">
-                                            {{c.comment_time}}
+                                        <span class="_cmt_time" style="color:rgb(83, 83, 83);font-size:12px;font-weight:5;font-style:inherit;">
+                                            {{c.comment_time|naturaltime|capfirst}}
                                         </span>
                                     </span>
-                                    
                                 </div>
-                                {% endif %}
-                                {% endfor %}
+                            {% endfor %}
                         </div>    
+                        {% if p.comments_set.all|slice:"5:" %}
+                        <span style="font-size:12px;padding:5px;color:gray"><a class="lcmt">more comments</a></span>
+                        <div class="cmt{{p.id}}">
 
+                        </div>
+                        {% endif %}                
                         <div class="comment_box">
                                 {% csrf_token %}
-                                {{cmt.comment}}
+                                <span id="{{p.id}}"></span>
+                                {{cmt.comment}}<input type="button" value="post" class="pstbtn" id="{{p.id}}"> 
                                 
                                 <!--<inpsut type="button" value="post" class="post-btn" imgid="{{p.id}}" >-->
                         </div>            
                     </div>
             </article>
         {% endfor %}
+
+        {% if photos.has_next %}
+        <a class="infinite-more-link" href="?page={{ photos.next_page_number }}">More</a>
+      {% endif %}
+      <div class="loading" style="display: none;">
+        Loading...
+      </div>
     </div>
     
     <div class="right">
@@ -120,6 +159,7 @@ Fasinger
 /*
     function resizeTextarea(id) {
         var a = document.getElementById(id);
+        
         a.style.height = 'auto';
         a.style.height = a.scrollHeight+'px';
       }
@@ -134,14 +174,123 @@ Fasinger
       }
       addEventListener('DOMContentLoaded', init);*/
 
+      $("input").click(function(e){
+          var id = e.target.id;
+          
+          var val=e.target.previousElementSibling.value
+          html='<div class="_cmt_box _cmt"><span class="_uname"><a href="/user/'+'ajay'+'  "><span style="color:black;font-weight:bold;margin-right:3/px;">'+'ajay'+'<span></a><span class="_cmt">&nbsp'+val+' :-</span><span class="_cmt_time" style="color:rgb(83, 83, 83);font-size:12px;font-weight:5;font-style:inherit;">'+'Jan 31,2018'+'</span></span></div>'
+          console.log(val)
+          console.log(e.target.parentElement.previousElementSibling.previousElementSibling)  
+
+          $.ajax({
+            type:'POST',
+            url:'/comment/'+e.target.id+'/',
+            data:{
+                comment:e.target.previousElementSibling.value,
+                //photo_id:$(this).closest('form').context.previousElementSibling.id,
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()                        
+            },
+            success:function(en){
+
+                html='<div class="_cmt_box _cmt"><span class="_uname"><a href="/user/'+en.uname+'  "><span style="color:black;font-weight:bold;margin-right:3/px;">'+en.uname+'<span></a><span class="_cmt">&nbsp'+en.comment+' :-</span><span class="_cmt_time" style="color:rgb(83, 83, 83);font-size:12px;font-weight:5;font-style:inherit;">'+en.date+'</span></span></div>'                
+                
+                //show_comment.previousElementSibling.className="show_comments tmp"
+                if(e.target.parentElement.previousElementSibling.previousElementSibling){
+                    e.target.parentElement.previousElementSibling.previousElementSibling.className="show_comments tmp"
+                  }
+                  else{
+                    e.target.parentElement.previousElementSibling.className="show_comments tmp"
+                  }
+        
+                  $('.tmp').append(html)
+                  //$('.tmp').find('._cmt').slideUp("fast")
+                  if(e.target.parentElement.previousElementSibling.previousElementSibling){
+                    e.target.parentElement.previousElementSibling.previousElementSibling.className="show_comments"
+                  }
+                  else{
+                    e.target.parentElement.previousElementSibling.className="show_comments"
+                  }
+
+                //console.log(e.comment)
+                //show_comment.previousElementSibling.className="show_comments tmp"
+                //$('.tmp').append("<div>dsfdsfdf</div>"
+                //var js = $.parseJSON(e)   
+                //html='<div class="_cmt_box"><span class="_uname"><a href="/user/'+e.uname+'  "><span style="color:black;font-weight:bold;margin-right:3/px;">'+e.uname+'<span></a><span class="_cmt">&nbsp'+e.comment+' :-</span><span class="_cmt_time" style="color:rgb(83, 83, 83);font-size:12px;font-weight:5;font-style:inherit;">'+e.date+'</span></span></div>'
+                //$('.tmp').append(html)
+                //show_comment.previousElementSibling.className="show_comments"  
+                e.target.previousElementSibling.value=""                              
+                //console.log(js)
+//                        show_comment.append(html)
+            }
+        })
+
+        })
 
 
-      $(document).ready(function($) {
-        
-        
-      $('textarea').on('change',function(e){
-          console.log(e)
-      })  
+      $("textarea").keypress(function (e) {
+            if(e.which == 13 && !e.shiftKey) {        
+                var val = $(this).closest('form').context.value
+                show_comment = ($(this).closest('form').context.parentNode)
+                e.preventDefault();
+                comment=$(this).closest('form').context         
+  //              show_comment.previousElementSibling.previousElementSibling.className="show_comments"
+                $.ajax({
+                    type:'POST',
+                    url:'/comment/'+$(this).closest('form').context.previousElementSibling.id+'/',
+                    data:{
+                        comment:$(this).closest('form').context.value,
+                        //photo_id:$(this).closest('form').context.previousElementSibling.id,
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()                        
+                    },
+                    success:function(e){
+
+                        html='<div class="_cmt_box _cmt"><span class="_uname"><a href="/user/'+e.uname+'  "><span style="color:black;font-weight:bold;margin-right:3/px;">'+e.uname+'<span></a><span class="_cmt">&nbsp'+e.comment+' :-</span><span class="_cmt_time" style="color:rgb(83, 83, 83);font-size:12px;font-weight:5;font-style:inherit;">'+e.date+'</span></span></div>'                
+                        //show_comment.previousElementSibling.className="show_comments tmp"
+                        if(show_comment.previousElementSibling.previousElementSibling)
+                        {
+                            show_comment.previousElementSibling.previousElementSibling.className="show_comments tmp"
+                        }else{
+                            show_comment.previousElementSibling.className="show_comments tmp"
+                        }
+                        //console.log(show_comment.previousElementSibling.previousElementSibling)
+                        $('.tmp').append(html)
+                        //$('.tmp').find('._cmt').slideUp("fast")
+                        if(show_comment.previousElementSibling.previousElementSibling)
+                        {
+                            show_comment.previousElementSibling.previousElementSibling.className="show_comments"
+                        }else{
+                            show_comment.previousElementSibling.className="show_comments"
+                        }    
+
+                        //console.log(e.comment)
+                        //show_comment.previousElementSibling.className="show_comments tmp"
+                        //$('.tmp').append("<div>dsfdsfdf</div>"
+                        //var js = $.parseJSON(e)   
+                        //html='<div class="_cmt_box"><span class="_uname"><a href="/user/'+e.uname+'  "><span style="color:black;font-weight:bold;margin-right:3/px;">'+e.uname+'<span></a><span class="_cmt">&nbsp'+e.comment+' :-</span><span class="_cmt_time" style="color:rgb(83, 83, 83);font-size:12px;font-weight:5;font-style:inherit;">'+e.date+'</span></span></div>'
+                        //$('.tmp').append(html)
+                        //show_comment.previousElementSibling.className="show_comments"  
+                        comment.value=""                              
+                        //console.log(js)
+//                        show_comment.append(html)
+                    }
+                })
+                return false;
+            }
+        });
+
+
+      $(document).ready(function($){  
+
+
+        var infinite = new Waypoint.Infinite({
+            element: $('.middle')[0],
+            onBeforePageLoad: function () {
+              $('.loading').show();
+            },
+            onAfterPageLoad: function ($items) {
+              $('.loading').hide();
+            }
+          });
 
         
       /*  $("#id_comment").keypress(function (e) {
@@ -163,6 +312,9 @@ Fasinger
           }
         });
 */
+
+        //$('.show_comments ._cmt').slice(2).css('display','none');
+
         var fix = $('.main').offset().top;
         $(window).scroll(function(){
 
@@ -176,7 +328,6 @@ Fasinger
                 $('.right-content').removeClass('fix_side')
             }
         })
-
 
         var alterClass = function() {
           var ww = document.body.clientWidth;
@@ -192,17 +343,91 @@ Fasinger
             $('.right').show()
           };
         };
+
+        var border_class = function() {
+            var ww = document.body.clientWidth;
+            if (ww < 600) {
+                
+              $('.article').addClass('border');
+              //$('.left').hide()
+              //$('.right').hide()
+            } else if (ww > 600) {
+                
+              $('.article').removeClass('border');
+              //$('.left').show()
+              //$('.right').show()
+            };
+          };
+
+
+
         $(window).resize(function(){
           alterClass();
+          border_class();
         });
         //Fire it when the page first loads:
         alterClass();
+        border_class();
       });
 
-
-
-
-
-
 </script>
+
+{% endblock %}
+
+{% block backbone %}
+
+<script type="text/template" id="bbs">
+    {% for i in p.comments_set.all %}
+        <p>{{i.comment}}</p>
+    {% endfor %}    
+    <p>{{c.comment}}</p>
+</script>
+
+
+<script type="text/javascript">
+
+    var Preview = Backbone.View.extend({
+        abc:function(){
+            console.log('home')
+        },
+        xyz:function(){
+            console.log("sdf")
+            var template = _.template($('#bbs').html())
+            $('.cmt6').html(template())
+            //console.log('newhome')
+        }
+    })
+    var pview = new Preview()
+
+    var Router = Backbone.Router.extend({
+        routes:{
+        '':'home',
+        'login':'login',
+        'registration':'registration'
+        }
+    });
+    var router = new Router()
+    
+
+
+    $('.lcmt').on('click',function(e){
+        $.ajax({
+            type:'GET',
+            url:'/getcomment/6/',
+            success:function(d){
+                console.log(d)
+            }
+            
+        })
+        //pview.xyz()
+        //console.log('sdfsadf')
+
+    })
+    router.on('route:home',function(e){
+        //console.log("herere")
+    })
+    Backbone.history.start();
+    
+</script>
+
 {% endblock %}

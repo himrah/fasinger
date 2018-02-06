@@ -4,9 +4,69 @@ from datetime import datetime
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from PIL import Image
 
 # Create your models here.
+
+class Profile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    about = models.TextField(blank=True)
+    birth_day = models.DateField(null=True,blank=True)
+
+    def __str__(self):
+        return str(self.user)
+
+"""    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()         """   
+
+
+
+
+class Profile_pic(models.Model):
+    profile = models.OneToOneField(Profile,on_delete=models.CASCADE)
+    profile_original = models.ImageField(upload_to='photos/profile/original')
+    profile_thumbs = models.ImageField(upload_to='photos/profile/thumbs')
+    profile_photo = models.ImageField(upload_to='photos/profile/photo')
+
+    def __str__(self):
+        return (self.profile.user.username)
+
+    def save(self):
+        im = Image.open(self.profile_original)
+        output = BytesIO()
+        basewidth = 600
+        #img = Image.open('somepic.jpg')
+        wpercent = (basewidth/float(im.size[0]))
+        hsize = int((float(im.size[1])*float(wpercent)))
+        im = im.resize((basewidth,hsize), Image.ANTIALIAS)      
+        im = im.convert("RGB")
+        im.save(output, format='JPEG', quality=70)
+        
+        self.profile_photo = InMemoryUploadedFile(output,'ImageField', "%s.jpg" %self.profile_original.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+        
+        weight,height=im.size
+        if weight > height:
+            r=(weight-height)/2
+            imc=im.crop((r,0,height+r,height))
+        else:
+            r=(height-weight)/2
+            imc=im.crop((0,r,weight,height-r))  
+        imc = imc.convert("RGB")      
+        imc=imc.resize((300,300),Image.ANTIALIAS)
+        output = BytesIO()
+        imc.save(output, format='JPEG', quality=70)
+        output.seek(0)
+        self.profile_thumbs = InMemoryUploadedFile(output,'ImageField', "%s.jpg" %self.profile_original.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+        super(Profile_pic,self).save()
+
 
 class Photos(models.Model):
     #pic_name=models.CharField(max_length=20)
@@ -81,7 +141,7 @@ class Photos(models.Model):
 
 
 class Comments(models.Model):
-    photo_id = models.ForeignKey(Photos,on_delete=models.CASCADE,null=True)
+    photo_id = models.ForeignKey(Photos, related_name='comments', on_delete=models.CASCADE,null=True)
     comment_time = models.DateTimeField(default=datetime.now,null=True)
     #upload_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='%(class)s_upload_by')
     comment_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True)

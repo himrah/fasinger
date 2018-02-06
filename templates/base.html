@@ -4,6 +4,8 @@
     <meta name="theme-color" content="orange" />
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <script src="{% static 'jquery.js' %}"></script>
+    <script src="{% static 'waypoint.js' %}"></script>    
+    <script src="{% static 'infinite.js' %}"></script>
 <!--    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>-->
     {% include 'backbone.html' %}
 
@@ -48,6 +50,12 @@
                     
                     <span class="top_p"><a href="/home">Home</a></span>
                     <span class="top_p"><a href="/">Upload</a></span>
+                    {% if user %}  
+                        <span class="top_p"><a href="/profile/{{user.username}}/">{{user.username}}</a></span>
+                        <span class="top_p"><a href="/logout/">Logout</a></span>
+                    {% else %}
+                    <span class="top_p"><a href="/accounts#login">Login</a></span>
+                    {% endif %}
                 </div>
             </div>
         </nav>

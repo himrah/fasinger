@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}
+welcome {{user.username}}
+{% endblock %}
+
+{% block content %}
+{% if not user.username %}
+<h2>Not Available</h2>
+{% else %}
+
+<h3>welcome {{user.username}}</h3>
+{% endif %}
+
+<section class="home_section">
+    <section class="profile_section">
+        <div class="profile_pic" style="width:200px">
+{% if user.profile %}
+        {% if user.profile.profile_pic %}
+            <img src="{{user.profile.profile_pic.profile_thumbs.url}}">
+        
+            {% else %}
+
+            <form method="POST" action="/updatepic/" enctype="multipart/form-data" id="formUpload">
+                {% csrf_token %}
+                {{profile_pic.profile_original}}
+                <input type="submit" class="btn btn-primary" value="post">
+            </form>
+            
+        {% endif %}
+
+{% endif %}
+    </div>
+        <div class="about_profile">
+            {% if user.profile %}
+                <h3>{{user.profile.birth_day}}</h3>
+                <h3>{{user.profile.about}}</h3>
+            {% else %}
+            <form method="POST" action="/updateprofile/" id="profile">
+                {% csrf_token %}
+                {{profile.as_p}}
+                <input type="submit" value="update">
+            </form>   
+            {% endif %} 
+        </div>
+    </section>
+
+    <section class="gallery_section">
+
+    </section>
+</section>
+
+{% endblock %}
